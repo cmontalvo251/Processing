@@ -1,5 +1,5 @@
-int xsize = 500;
-int ysize = 500;
+int xsize = 900;
+int ysize = 900;
 int ellipsesize = 10;
 float factor = 0.5;
 float y = ysize-ellipsesize;
@@ -13,8 +13,12 @@ float g = 0;
 int red = 100;
 int blue = 100;
 int green = 100;
-float xbad = xsize/2;
+float xbad = random(xsize)/2+xsize/2;
 float ybad = y;
+int numclicks = 0;
+float[] xclicked = new float[100];
+float[] yclicked = new float[100];
+float[][] colors = new float[100][3];
 
 void setup()
 {
@@ -42,8 +46,19 @@ void draw()
    blue = int(random(255));
    green = int(random(255));
  }
+ for (int i = 0;i<numclicks;i++)
+ {
+   fill(colors[i][0],colors[i][1],colors[i][2]);
+   ellipse(xclicked[i],yclicked[i],ellipsesize*2,ellipsesize*2);
+ }
  if (mousePressed && xdot == 0)
  {
+   colors[numclicks][0] = red;
+   colors[numclicks][1] = green;
+   colors[numclicks][2] = blue;
+   xclicked[numclicks] = mouseX;
+   yclicked[numclicks] = mouseY;
+   numclicks++;
    angle = -atan2(mouseY-y,mouseX-0);
    xdot = V0*cos(angle);
    ydot = V0*sin(angle);
