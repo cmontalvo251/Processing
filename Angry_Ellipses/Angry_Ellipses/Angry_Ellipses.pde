@@ -57,9 +57,9 @@ void draw()
    colors[numclicks][1] = green;
    colors[numclicks][2] = blue;
    xclicked[numclicks] = mouseX;
-   yclicked[numclicks] = mouseY;
+   yclicked[numclicks] = ysize/2;
    numclicks++;
-   angle = -atan2(mouseY-y,mouseX-0);
+   angle = PI/2-mouseX*PI/(2*xsize);
    xdot = V0*cos(angle);
    ydot = V0*sin(angle);
    g = 9.81;
