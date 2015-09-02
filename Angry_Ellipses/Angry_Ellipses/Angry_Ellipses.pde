@@ -1,5 +1,5 @@
-int xsize = 900;
-int ysize = 900;
+int xsize = 700;
+int ysize = 700;
 int ellipsesize = 10;
 float factor = 0.5;
 float y = ysize-ellipsesize;
@@ -22,7 +22,7 @@ float[][] colors = new float[100][3];
 
 void setup()
 {
- size(xsize,ysize);
+ size(700,700);
  background(255); 
 }
 
@@ -35,10 +35,24 @@ void draw()
  x = x + xdot*deltat;
  y = y - ydot*deltat;
  ydot = ydot - g*deltat;
+ for (int i = 0;i<numclicks;i++)
+ {
+   fill(colors[i][0],colors[i][1],colors[i][2]);
+   ellipse(xclicked[i],yclicked[i],ellipsesize*2,ellipsesize*2);
+ }
  if (y > ysize)
  {
-   x = ellipsesize;
-   y = ysize-ellipsesize;
+   if (abs(x-xbad) < ellipsesize)
+   {
+     textSize(64);
+     fill(red,blue,green);
+     text("YOU WIN!!!", xsize/3,ysize/2); 
+   }
+   else
+   {
+     x = ellipsesize;
+     y = ysize-ellipsesize;
+   }
    xdot = 0;
    ydot = 0;
    g = 0;
@@ -46,20 +60,15 @@ void draw()
    blue = int(random(255));
    green = int(random(255));
  }
- for (int i = 0;i<numclicks;i++)
- {
-   fill(colors[i][0],colors[i][1],colors[i][2]);
-   ellipse(xclicked[i],yclicked[i],ellipsesize*2,ellipsesize*2);
- }
  if (mousePressed && xdot == 0)
  {
    colors[numclicks][0] = red;
    colors[numclicks][1] = green;
    colors[numclicks][2] = blue;
    xclicked[numclicks] = mouseX;
-   yclicked[numclicks] = ysize/2;
+   yclicked[numclicks] = ysize/8;
    numclicks++;
-   angle = PI/2-mouseX*PI/(2*xsize);
+   angle = PI/2-mouseX*PI/(4*xsize);
    xdot = V0*cos(angle);
    ydot = V0*sin(angle);
    g = 9.81;
