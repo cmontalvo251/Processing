@@ -7,3 +7,5 @@ ScreenCaptureCode - This is to be used with the Ambient Lighting Arduino module.
 Langton's Ant - The ant moves forward and turns if the cell is alive or not. The system is chaotic up to about 10000 iterations but then randomly converges to a repeatable scenario. I wonder if you can make it chaotic with an extra rule or something.
 
 Conway's Game of Life - Each cell has rule based on neighbors and are documented in the code. Pretty cool simulation
+
+Mandelbrot - Iteration of Mandelbrot sets. The speed of explosion is given a color.
