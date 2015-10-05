@@ -12,7 +12,8 @@ int current_iteration = 0;
 int[][] iter_matrix;
 //Save c Number and initial z
 Complex[][] z_matrix;
-Complex[][] c_matrix;
+Complex c;
+//Complex[][] c_matrix;
 
 ////Setup the Plotter
 void setup()
@@ -21,7 +22,8 @@ void setup()
   //Setup Matrices
   iter_matrix = new int[lifesize1][lifesize2];
   z_matrix = new Complex[lifesize1][lifesize2];
-  c_matrix = new Complex[lifesize1][lifesize2];
+  c = new Complex(random(-1.0,1.0),random(-1.0,1.0));
+  //c = new Complex(-1.5,1.0);
   for (int idx = 0;idx<lifesize1;idx++)
   {
     float real = -2.0+float(idx)/(float(lifesize1)-1)*4.0;
@@ -31,8 +33,8 @@ void setup()
      float imag = -2.0+float(jdx)/(float(lifesize2)-1)*4.0;
      //float imag = 0.0;
      //print(real+" "+imag+"\n");
-     c_matrix[idx][jdx] = new Complex(real,imag);
-     z_matrix[idx][jdx] = new Complex(0.0,0.0);
+     //c_matrix[idx][jdx] = new Complex(real,imag);
+     z_matrix[idx][jdx] = new Complex(real,imag);
      iter_matrix[idx][jdx] = 0;
     }
   }
@@ -46,7 +48,7 @@ void draw()
   background(255);
   
   ///Set Frame Rate
-  frameRate(10);
+  //frameRate(10);
   
   //Increment Iteration Number
   current_iteration++;
@@ -58,7 +60,7 @@ void draw()
   //Iterate z_matrix
   for (int idx = 0;idx<lifesize1;idx++) {
     for (int jdx = 0;jdx<lifesize2;jdx++) {
-      //z = z^2 + c   
+      //z = z^2 + c
       //print("idx = "+idx+" jdx = "+jdx+"\n");
       //z_matrix[idx][jdx].puts();
       //c_matrix[idx][jdx].puts();
@@ -75,7 +77,7 @@ void draw()
         }
       } else {
         z_matrix[idx][jdx].multiply(z_matrix[idx][jdx],z_matrix[idx][jdx]);
-        z_matrix[idx][jdx].plus(z_matrix[idx][jdx],c_matrix[idx][jdx]);
+        z_matrix[idx][jdx].plus(z_matrix[idx][jdx],c);
       }
      }
   }

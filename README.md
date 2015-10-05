@@ -9,3 +9,5 @@ Langton's Ant - The ant moves forward and turns if the cell is alive or not. The
 Conway's Game of Life - Each cell has rule based on neighbors and are documented in the code. Pretty cool simulation
 
 Mandelbrot - Iteration of Mandelbrot sets. The speed of explosion is given a color.
+
+Julia Sets - Use the sequence f(z) = z^2 + c except c is constant over the entire complex plane. Furthermore, z varies across the complex plane rather than starting at zero. Slightly different than Mandelbrot but very similar. Currently c is random from +-2.0+-2.0i which means you will get a different Julia set every time you run the code
