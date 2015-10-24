@@ -11,3 +11,6 @@ Conway's Game of Life - Each cell has rule based on neighbors and are documented
 Mandelbrot - Iteration of Mandelbrot sets. The speed of explosion is given a color.
 
 Julia Sets - Use the sequence f(z) = z^2 + c except c is constant over the entire complex plane. Furthermore, z varies across the complex plane rather than starting at zero. Slightly different than Mandelbrot but very similar. Currently c is random from +-2.0+-2.0i which means you will get a different Julia set every time you run the code
+
+Doodle - Attempting to make my own doodle program so I don't have to freaking download someone elses. Is it really that hard to just draw lines on a screen. 
+Apparently yes. This program still needs a bit of work.
