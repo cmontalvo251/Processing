@@ -14,3 +14,5 @@ Julia Sets - Use the sequence f(z) = z^2 + c except c is constant over the entir
 
 Doodle - Attempting to make my own doodle program so I don't have to freaking download someone elses. Is it really that hard to just draw lines on a screen. 
 Apparently yes. This program still needs a bit of work.
+
+FreeSix - Eventually this will read information from a 6DOF sensor and move a cube around on the screen
