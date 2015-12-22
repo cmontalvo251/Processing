@@ -2,6 +2,7 @@ import processing.serial.*;
 
 Serial myPort;  // Create object from Serial class
 
+//REVISIT REVISIT - need to change this to the correct serialPort
 final String serialPort = "/dev/tty.usbmodem621"; // replace this with your serial port. On windows you will need something like "COM1".
 
 float [] q = new float [4];
@@ -17,11 +18,11 @@ final int VIEW_SIZE_X = 800, VIEW_SIZE_Y = 600;
 
 void setup() 
 {
-  size(VIEW_SIZE_X, VIEW_SIZE_Y, P3D);
-  myPort = new Serial(this, serialPort, 115200);  
+  size(VIEW_SIZE_X, VIEW_SIZE_Y, P3D); //set view size with 3D processing
+  myPort = new Serial(this, serialPort, 115200); //this will need to change. Maybe 9600 baud rate?
+  //connect to the arduino
 
-  font = createFont("Courier", 32); 
-  
+  font = createFont("Courier", 32); //built in processing command 
 
   /*
   float [] axis = new float[3];
@@ -41,37 +42,41 @@ void setup()
 
   delay(100);
   myPort.clear();
-  myPort.write("1");
+  myPort.write("1"); //wait, why are we writing? the arduino isn't listening
+  //Whatever, maybe we don't need this. I might comment it out and see what happens
+  //REVISIT REVISIT - not sure why this is happening
 }
 
 
 float decodeFloat(String inString) {
+  //Again this routine is so beyond me it's insane
   byte [] inData = new byte[4];
 
   if (inString.length() == 8) {
-    inData[0] = (byte) unhex(inString.substring(0, 2));
-    inData[1] = (byte) unhex(inString.substring(2, 4));
-    inData[2] = (byte) unhex(inString.substring(4, 6));
-    inData[3] = (byte) unhex(inString.substring(6, 8));
+    inData[0] = (byte) unhex(inString.substring(0, 2)); //unhex and substring are all methods
+    inData[1] = (byte) unhex(inString.substring(2, 4)); //for hexadecimal
+    inData[2] = (byte) unhex(inString.substring(4, 6)); //REVISIT REVISIT - need to look at this
+    inData[3] = (byte) unhex(inString.substring(6, 8)); //later if I want
   }
 
+  //More bit shift operations 24,16,8, and then 0xff which is 255
   int intbits = (inData[3] << 24) | ((inData[2] & 0xff) << 16) | ((inData[1] & 0xff) << 8) | (inData[0] & 0xff);
   return Float.intBitsToFloat(intbits);
 }
 
 
 
-
-
-
-
 void readQ() {
-  if (myPort.available() >= 18) {
-    String inputString = myPort.readStringUntil('\n');
+  if (myPort.available() >= 18) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
+    //so if the serial command is 4 numbers at 4 bytes per float that means there is only 16 bytes.
+    //so this may never execute correctly - ok so apprently there are 5 numbers because a line end is another one so it's
+    //5*4 = 20 bytes so I think this will be fine
+    String inputString = myPort.readStringUntil('\n'); //line 71 of the .ino writes "" which apparently is a line break so
+    //hopefully this will work right. REVISIT REVISIT
     //print(inputString);
     if (inputString != null && inputString.length() > 0) {
-      String [] inputStringArr = split(inputString, ",");
-      if (inputStringArr.length >= 5) { // q1,q2,q3,q4,\r\n so we have 5 elements
+      String [] inputStringArr = split(inputString, ","); //this splits the elements using a comma as a delimiter
+      if (inputStringArr.length >= 5) { // q0,q1,q2,q3,\r\n so we have 5 elements
         q[0] = decodeFloat(inputStringArr[0]);
         q[1] = decodeFloat(inputStringArr[1]);
         q[2] = decodeFloat(inputStringArr[2]);
@@ -81,21 +86,20 @@ void readQ() {
   }
 }
 
-
 void buildBoxShape() {
   //box(60, 10, 40);
   noStroke();
-  beginShape(QUADS);
+  beginShape(QUADS); //again openGL commands to draw a cube
 
   //Z+ (to the drawing area)
-  fill(#00ff00);
+  fill(#00ff00); // oh wow the cube is different colors
   vertex(-30, -5, 20);
   vertex(30, -5, 20);
   vertex(30, 5, 20);
   vertex(-30, 5, 20);
 
   //Z-
-  fill(#0000ff);
+  fill(#0000ff); 
   vertex(-30, -5, -20);
   vertex(30, -5, -20);
   vertex(30, 5, -20);
@@ -129,52 +133,64 @@ void buildBoxShape() {
   vertex(30, 5, 20);
   vertex(-30, 5, 20);
 
-  endShape();
+  endShape(); //done with shape and quit
 }
 
 
 void drawCube() {  
-  pushMatrix();
-  translate(VIEW_SIZE_X/2, VIEW_SIZE_Y/2 + 50, 0);
-  scale(5, 5, 5);
+  pushMatrix();  //sets the view port window - these are openGL commands
+  translate(VIEW_SIZE_X/2, VIEW_SIZE_Y/2 + 50, 0); //translate the cube 
+  scale(5, 5, 5); //scale the cube
 
   // a demonstration of the following is at 
   // http://www.varesano.net/blog/fabio/ahrs-sensor-fusion-orientation-filter-3d-graphical-rotating-cube
-  rotateZ(-Euler[2]);
-  rotateX(-Euler[1]);
-  rotateY(-Euler[0]);
+  rotateZ(-Euler[2]); //psi 
+  rotateX(-Euler[1]); //theta
+  rotateY(-Euler[0]); //psi in that order for standard Aerospace sequences
 
-  buildBoxShape();
+  buildBoxShape(); //use QUADS to draw the faces in different colors
 
-  popMatrix();
+  popMatrix(); //restore the orientation window 
 }
 
 
+//Alright here is our draw loop
 void draw() {
-  background(#000000);
-  fill(#ffffff);
+  background(#000000); //set the background to white? 
+  fill(#ffffff); //set the background to black? maybe vice versa. Doesn't really matter
 
-  readQ();
+  readQ(); //Whoops I skipped this routine. so this just reads the serial data from the 
+  //arduino. Some revisits in here but basically it does crazy bit shifting and pulls in the
+  //data
 
+  //Hq is initially set to null so until hq is initialized
   if (hq != null) { // use home quaternion
+    //If h has been pressed we convert the product of hq and q to Euler
+    //QuatProd is a Hamilton Product which is equivalent to rotating a vector
     quaternionToEuler(quatProd(hq, q), Euler);
     text("Disable home position by pressing \"n\"", 20, VIEW_SIZE_Y - 30);
   }
   else {
+    //this command will be set if hq is null or n is pressed
+    //This just converts the quaternion to Euler
     quaternionToEuler(q, Euler);
     text("Point FreeIMU's X axis to your monitor then press \"h\"", 20, VIEW_SIZE_Y - 30);
+    //so it looks like there is a keypress function
   }
 
-  textFont(font, 20);
-  textAlign(LEFT, TOP);
-  text("Q:\n" + q[0] + "\n" + q[1] + "\n" + q[2] + "\n" + q[3], 20, 20);
-  text("Euler Angles:\nYaw (psi)  : " + degrees(Euler[0]) + "\nPitch (theta): " + degrees(Euler[1]) + "\nRoll (phi)  : " + degrees(Euler[2]), 200, 20);
+  textFont(font, 20);  //set the textfont to Courier and size 20
+  textAlign(LEFT, TOP); //set the test to left and top
+  text("Q:\n" + q[0] + "\n" + q[1] + "\n" + q[2] + "\n" + q[3], 20, 20); // this outputs the quaternion values
+  text("Euler Angles:\nYaw (psi)  : " + degrees(Euler[0]) + "\nPitch (theta): " + degrees(Euler[1]) + "\nRoll (phi)  : " + degrees(Euler[2]), 200, 20); //this outputs the euler angles
 
-  drawCube();
+  //Alright then we draw a cube on the screen - let's check this out
+  drawCube(); //using openGL
 }
 
 
 void keyPressed() {
+  //Ok cool so if h is pressed hq is set to the conjugate quaternion
+  //if n is pressed, hq is reset to null
   if (key == 'h') {
     println("pressed h");
 
@@ -191,11 +207,15 @@ void keyPressed() {
 // "An efficient orientation filter for inertial and intertial/magnetic sensor arrays" Chapter 2 Quaternion representation
 
 void quaternionToEuler(float [] q, float [] euler) {
+  //Standard quaternion to Euler conversion routine
   euler[0] = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0]*q[0] + 2 * q[1] * q[1] - 1); // psi
   euler[1] = -asin(2 * q[1] * q[3] + 2 * q[0] * q[2]); // theta
   euler[2] = atan2(2 * q[2] * q[3] - 2 * q[0] * q[1], 2 * q[0] * q[0] + 2 * q[3] * q[3] - 1); // phi
 }
 
+//The product of two quaternions is equivalent to two rotations. This removes the bias in the 
+//sensors to plot the cube correctly
+//Google Hamilton Product
 float [] quatProd(float [] a, float [] b) {
   float [] q = new float[4];
 
@@ -208,6 +228,8 @@ float [] quatProd(float [] a, float [] b) {
 }
 
 // returns a quaternion from an axis angle representation
+// this uses the TIB rotation matrix. This is the same equation I derived from 
+// my research with Jonny Rogers on the Smortar project
 float [] quatAxisAngle(float [] axis, float angle) {
   float [] q = new float[4];
 
@@ -225,9 +247,9 @@ float [] quatAxisAngle(float [] axis, float angle) {
 float [] quatConjugate(float [] quat) {
   float [] conj = new float[4];
 
-  conj[0] = quat[0];
+  conj[0] = quat[0]; //while the scalar portion stays the same
   conj[1] = -quat[1];
-  conj[2] = -quat[2];
+  conj[2] = -quat[2]; //the conjugate of a quaternion is just the negative of the vector
   conj[3] = -quat[3];
 
   return conj;

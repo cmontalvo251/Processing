@@ -15,7 +15,7 @@ void setup()
 
 void draw()
 {
-  if (mouseX > 0.9*displayWidth && mouseY > 0.9*displayHeight) //Bottom right hand corner
+  if (mouseX > 0.95*displayWidth && mouseY > 0.95*displayHeight) //Bottom right hand corner
   {
     background(0); //Refresh page
     delay = 10000000;
