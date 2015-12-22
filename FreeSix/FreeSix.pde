@@ -3,11 +3,12 @@ import processing.serial.*;
 Serial myPort;  // Create object from Serial class
 
 //REVISIT REVISIT - need to change this to the correct serialPort
-final String serialPort = "/dev/tty.usbmodem621"; // replace this with your serial port. On windows you will need something like "COM1".
+//final String serialPort = "/dev/tty.usbmodem621"; // replace this with your serial port. On windows you will need something like "COM1".
 
 float [] q = new float [4];
 float [] hq = null;
 float [] Euler = new float [3]; // psi, theta, phi
+float [] Euler_Temp = new float [3];
 
 int lf = 10; // 10 is '\n' in ASCII
 byte[] inBuffer = new byte[22]; // this is the number of chars on each line from the Arduino (including /r/n)
@@ -18,8 +19,9 @@ final int VIEW_SIZE_X = 800, VIEW_SIZE_Y = 600;
 
 void setup() 
 {
-  size(VIEW_SIZE_X, VIEW_SIZE_Y, P3D); //set view size with 3D processing
-  myPort = new Serial(this, serialPort, 115200); //this will need to change. Maybe 9600 baud rate?
+  size(800, 600, P3D); //set view size with 3D processing
+  //myPort = new Serial(this, serialPort, 115200); //this will need to change. Maybe 9600 baud rate?
+  myPort = new Serial(this,Serial.list()[0],115200); //make sure the baud rate is the same as the ino code
   //connect to the arduino
 
   font = createFont("Courier", 32); //built in processing command 
@@ -41,8 +43,8 @@ void setup()
    */
 
   delay(100);
-  myPort.clear();
-  myPort.write("1"); //wait, why are we writing? the arduino isn't listening
+  //myPort.clear();
+  //myPort.write("1"); //wait, why are we writing? the arduino isn't listening
   //Whatever, maybe we don't need this. I might comment it out and see what happens
   //REVISIT REVISIT - not sure why this is happening
 }
@@ -67,6 +69,8 @@ float decodeFloat(String inString) {
 
 
 void readQ() {
+  //print(myPort.available());
+  //print("\n");
   if (myPort.available() >= 18) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
     //so if the serial command is 4 numbers at 4 bytes per float that means there is only 16 bytes.
     //so this may never execute correctly - ok so apprently there are 5 numbers because a line end is another one so it's
@@ -76,6 +80,8 @@ void readQ() {
     //print(inputString);
     if (inputString != null && inputString.length() > 0) {
       String [] inputStringArr = split(inputString, ","); //this splits the elements using a comma as a delimiter
+      //print(inputStringArr.length);
+      //print("\n");
       if (inputStringArr.length >= 5) { // q0,q1,q2,q3,\r\n so we have 5 elements
         q[0] = decodeFloat(inputStringArr[0]);
         q[1] = decodeFloat(inputStringArr[1]);
@@ -144,7 +150,7 @@ void drawCube() {
 
   // a demonstration of the following is at 
   // http://www.varesano.net/blog/fabio/ahrs-sensor-fusion-orientation-filter-3d-graphical-rotating-cube
-  rotateZ(-Euler[2]); //psi 
+  rotateZ(-Euler[2]); //phi 
   rotateX(-Euler[1]); //theta
   rotateY(-Euler[0]); //psi in that order for standard Aerospace sequences
 
@@ -177,11 +183,18 @@ void draw() {
     text("Point FreeIMU's X axis to your monitor then press \"h\"", 20, VIEW_SIZE_Y - 30);
     //so it looks like there is a keypress function
   }
+  
+  //This is for putting the code inside the Duplo airplane
+  for (int idx = 0;idx<3;idx++) {
+   Euler_Temp[idx] = Euler[idx]; 
+  }
+  Euler[1] = -Euler_Temp[2]; //Switch phi and theta
+  Euler[2] = Euler_Temp[1];
 
   textFont(font, 20);  //set the textfont to Courier and size 20
   textAlign(LEFT, TOP); //set the test to left and top
   text("Q:\n" + q[0] + "\n" + q[1] + "\n" + q[2] + "\n" + q[3], 20, 20); // this outputs the quaternion values
-  text("Euler Angles:\nYaw (psi)  : " + degrees(Euler[0]) + "\nPitch (theta): " + degrees(Euler[1]) + "\nRoll (phi)  : " + degrees(Euler[2]), 200, 20); //this outputs the euler angles
+  text("Euler Angles:\nYaw (psi)  : " + degrees(Euler[0]) + "\nPitch (theta): " + degrees(Euler[1]) + "\nRoll (phi)  : " + degrees(-Euler[2]), 200, 20); //this outputs the euler angles
 
   //Alright then we draw a cube on the screen - let's check this out
   drawCube(); //using openGL
