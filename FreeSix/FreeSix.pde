@@ -6,6 +6,9 @@ Serial myPort;  // Create object from Serial class
 //final String serialPort = "/dev/tty.usbmodem621"; // replace this with your serial port. On windows you will need something like "COM1".
 
 float [] q = new float [4];
+float [] accelcal = new float [3];
+float [] rg = new float [3];
+float [] accel = new float[3];
 float [] hq = null;
 float [] Euler = new float [3]; // psi, theta, phi
 float [] Euler_Temp = new float [3];
@@ -42,11 +45,20 @@ void setup()
    hq[3] = 1.0;
    */
 
-  delay(100);
+  delay(3000);
   //myPort.clear();
   //myPort.write("1"); //wait, why are we writing? the arduino isn't listening
   //Whatever, maybe we don't need this. I might comment it out and see what happens
   //REVISIT REVISIT - not sure why this is happening
+  //accel[2] = 0;
+  //while (abs(accel[2]) < 10) { 
+  //for (int idx = 0;idx<100;idx++){
+  //  readQ();
+  //}
+  //}
+  //for (int idx = 0;idx<3;idx++) {
+  //  accelcal[idx] = accel[idx];
+  //}
 }
 
 
@@ -71,10 +83,12 @@ float decodeFloat(String inString) {
 void readQ() {
   //print(myPort.available());
   //print("\n");
-  if (myPort.available() >= 18) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
+  if (myPort.available() >= 40) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
     //so if the serial command is 4 numbers at 4 bytes per float that means there is only 16 bytes.
     //so this may never execute correctly - ok so apprently there are 5 numbers because a line end is another one so it's
     //5*4 = 20 bytes so I think this will be fine
+    //If you are printing raw values as well then there are 4+6+1 = 11
+    //11*4 = 44 bytes
     String inputString = myPort.readStringUntil('\n'); //line 71 of the .ino writes "" which apparently is a line break so
     //hopefully this will work right. REVISIT REVISIT
     //print(inputString);
@@ -82,11 +96,18 @@ void readQ() {
       String [] inputStringArr = split(inputString, ","); //this splits the elements using a comma as a delimiter
       //print(inputStringArr.length);
       //print("\n");
-      if (inputStringArr.length >= 5) { // q0,q1,q2,q3,\r\n so we have 5 elements
+      if (inputStringArr.length >= 11) { // q0,q1,q2,q3,\r\n so we have 5 elements
+        //if you are reading raw values it means that there are 11 elements
         q[0] = decodeFloat(inputStringArr[0]);
         q[1] = decodeFloat(inputStringArr[1]);
         q[2] = decodeFloat(inputStringArr[2]);
         q[3] = decodeFloat(inputStringArr[3]);
+        accel[0] = decodeFloat(inputStringArr[4]);
+        accel[1] = decodeFloat(inputStringArr[5]);
+        accel[2] = decodeFloat(inputStringArr[6]);
+        rg[0] = decodeFloat(inputStringArr[7]);
+        rg[1] = decodeFloat(inputStringArr[8]);
+        rg[2] = decodeFloat(inputStringArr[9]);        
       }
     }
   }
@@ -195,6 +216,21 @@ void draw() {
   textAlign(LEFT, TOP); //set the test to left and top
   text("Q:\n" + q[0] + "\n" + q[1] + "\n" + q[2] + "\n" + q[3], 20, 20); // this outputs the quaternion values
   text("Euler Angles:\nYaw (psi)  : " + degrees(Euler[0]) + "\nPitch (theta): " + degrees(Euler[1]) + "\nRoll (phi)  : " + degrees(-Euler[2]), 200, 20); //this outputs the euler angles
+  //rg[0] = 0;
+  //rg[1] = 0;
+  //rg[2] = 0;
+  text("RG(deg/s):\n" + "X:" + int(rg[0]) + "\n Y:" + int(rg[1]) + "\n Z:" + int(rg[2]),500,20);
+  //accel[0] = 0;
+  //accel[1] = 0;
+  //accel[2] = 0;
+  //for (int idx = 0;idx<3;idx++) {
+  //  accel[idx] = accel[idx] - accelcal[idx];
+  //  accel[idx] /= 500;
+  //  accel[idx] = int(accel[idx]);
+ // }
+  //accel[2] = accel[2]+1;
+  text("ACCEL(Gs):\n" + "X:" + accel[0] + "\n Y:" + accel[1] + "\n Z:" + accel[2],200,450);
+  //text("ACCELCAL(Gs):\n" + "X:" + accelcal[0] + "\n Y:" + accelcal[1] + "\n Z:" + accelcal[2],20,450);
 
   //Alright then we draw a cube on the screen - let's check this out
   drawCube(); //using openGL
