@@ -2,10 +2,10 @@ import processing.serial.*; //library for serial communication
 
 Serial port; //creates object "port" of serial class
 int numVars = 6; //Number of variables to read
-String [] names = {"Var1","Var2","Var3","Var4","Var5","Var6","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
-float [] miny = {-1,-2,-3,-4,-5,-6}; //max and min values of data read in
-float [] maxy = {1,2,3,4,5,6};
-int textsize = 6*32/numVars; //Size of text
+String [] names = {"Airspeed (m/s)","Dummy","Var3","Var4","Var5","Var6","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
+float [] miny = {0,1,-3,-4,-5,-6}; //max and min values of data read in
+float [] maxy = {5,10,3,4,5,6};
+int textsize = 32; //Size of text
 float rad = 20; //Compute the radius of the circle
 int widthx = 500; //size of the screen
 int widthy = 500;
@@ -34,7 +34,7 @@ float decodeFloat(String inString) {
 }
 
 void readSerial() {
- if (port.available() >= (numVars-1)*4) { 
+ if (port.available() >= 20) { 
    //Each variable is 4 bytes so if you have more than N-1)*4 bytes you can read it.
    String inputString = port.readStringUntil('\n'); //the .ino writes "" which apparently is a line break 
    if (inputString != null && inputString.length() > 0) {
@@ -53,8 +53,8 @@ void draw()
 {
   background(0);
   readSerial(); //Read Serial data
-  float xdist = widthx/numVars;
-  for (int idx = 0;idx<numVars;idx++) {
+  float xdist = widthx/1;
+  for (int idx = 0;idx<1;idx++) {
     //data[idx] = sin((idx+1)*millis()/1000.0);
     float x = xdist*idx+xdist/2;
     float y0 = (3.0/4.0)*widthy+rad*1.1;

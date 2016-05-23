@@ -2,9 +2,9 @@ import processing.serial.*; //library for serial communication
 
 Serial port; //creates object "port" of serial class
 int numVars = 6; //Number of variables to read
-String [] names = {"Var1","Var2","Var3","Var4","Var5","Var6","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
-float [] miny = {-1,-2,-3,-4,-5,-6}; //max and min values of data read in
-float [] maxy = {1,2,3,4,5,6};
+String [] names = {"Psi","Theta","Phi","P","Q","R","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
+float [] miny = {-90,-90,-90,-1,-1,-1}; //max and min values of data read in
+float [] maxy = {90,90,90,1,1,1};
 int textsize = 6*32/numVars; //Size of text
 float rad = 20; //Compute the radius of the circle
 int widthx = 500; //size of the screen
@@ -13,7 +13,7 @@ float [] data = new float [numVars];
 
 void setup()
 {  
-  port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
+  port = new Serial(this, Serial.list()[0],115200); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
   size(500,500); //window size (doesn't matter)
 }
 
@@ -60,6 +60,7 @@ void draw()
     float y0 = (3.0/4.0)*widthy+rad*1.1;
     float y = (3.0/4.0)*(widthy - widthy/2.0*(data[idx]-miny[idx])/maxy[idx])+rad*1.1;
     textSize(textsize);
+    //print(names[idx].length());
     text(names[idx],x-names[idx].length()*textsize/4.0,y0+textsize);
     textSize(textsize/2.0);
     text(data[idx],x-names[idx].length()*textsize/4.0,y0+2*textsize);
