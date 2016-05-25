@@ -14,17 +14,17 @@ void setup() {
 
 void draw() {
   if(mousePressed==true){
-    myport.write('1');
-    println("1");
-    delay(20);
-    myport.write('A');
-    delay(20);
+    myport.write("test");
+    println("Getting Data");
+    delay(100);
+    //myport.write('A');
+    //delay(200);
    }
 }
 
 //This only runs if the arduino sends us a value over serial
 void serialEvent(Serial myport) {
- println("Serial Event");
+ //println("Serial Event");
  int inByte = myport.read(); 
   if (firstcontact == false) {
     if (inByte == 'A') {
@@ -41,7 +41,7 @@ void serialEvent(Serial myport) {
     //Once we get 3 bytes
     if (serialcount > 2) {
        println(serialinarray[0] + "\t" + serialinarray[1] + "\t" + serialinarray[2]);
-       myport.write('A');
+       //myport.write('A');
        serialcount = 0;
     }
   }
