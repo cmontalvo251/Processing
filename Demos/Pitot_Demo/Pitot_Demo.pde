@@ -13,7 +13,10 @@ float [] data = new float [numVars];
 
 void setup()
 {  
-  port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
+  //Debugging
+  //print(Serial.list());
+  //port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
+  port = new Serial(this,"/dev/ttyUSB0",9600); 
   size(500,500); //window size (doesn't matter)
 }
 
