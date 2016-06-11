@@ -12,7 +12,7 @@ void setup()
   //Debugging
   //print(Serial.list());
   //port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
-  port = new Serial(this,"/dev/ttyUSB0",9600); 
+  port = new Serial(this,"/dev/ttyACM0",9600); 
   size(500,500); //window size (doesn't matter)
 }
 
@@ -20,9 +20,9 @@ void draw()
 {
   background(0);
   float y = mouseY;
-  data = int(y*180.0/380.0);
-  if (data > 180) {
-    data = 180;
+  data = int(y*255.0/380.0);
+  if (data > 255) {
+    data = 255;
     y = 380.0;
   }
   float y0 = (3.0/4.0)*widthy+rad*1.1;
@@ -30,15 +30,15 @@ void draw()
   text(names,widthx/3,y0+textsize);
   textSize(textsize/2.0);
   
-  //Convert 0-180 to 0-9
-  int ival = int(data*9.0/180.0);
+  //Convert 0-255 to int
+  int ival = int(data);
   //Now convert ival to a char
-  String val = str(ival);
-  //println(val);
-  port.write(val);
+  //String val = str(ival);
+  //println(ival);
+  port.write(ival);
   //delay(10);
   
-  text(ival*180.0/9.0,widthx/3,y0+2*textsize);
+  text(ival*180.0/255.0,widthx/3,y0+2*textsize);
   ellipse(widthx/3,y,rad,rad);
   
 }
