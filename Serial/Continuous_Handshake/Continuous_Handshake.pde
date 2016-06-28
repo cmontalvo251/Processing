@@ -3,22 +3,19 @@ import processing.serial.*;
 Serial myport;
 int numVars = 3;
 int[] serialinarray = new int[numVars];
-//int serialcount = 0;
-//boolean firstcontact = true;
+int serialcount = 0;
+boolean firstcontact = false;
 boolean oktosend = true;
 
 void setup() {
   size(200,200);
   myport = new Serial(this,Serial.list()[0],9600);
   //myport.bufferUntil('\n');
-  delay(2000); //wait for arduino to initialize
 }
 
 void draw() {
     //Send Data to Arduino
-    if (oktosend) {
-    //if (mousePressed) {
-      delay(200);
+    if (oktosend && firstcontact) {
       int outByte;
       print("Processing: ");
       for (int idx = 0;idx<3;idx++){
@@ -35,9 +32,8 @@ void draw() {
 //This only runs if the arduino sends us a value over serial
 void serialEvent(Serial myport) {
  //println("Serial Event");
-  //int inByte;
-  /* if (firstcontact == false) {
-    inByte = myport.read(); 
+ int inByte = myport.read(); 
+  if (firstcontact == false) {
     if (inByte == 'A') {
       myport.clear();
       println("Contact Established");
@@ -48,27 +44,14 @@ void serialEvent(Serial myport) {
       firstcontact = true;
     }
   }
-  else { */
-    //inByte = myport.read();
-    //if (inByte != 65) { //throw out all 65's because they are extraneous A's
-      //serialinarray[serialcount] = inByte;
-      //serialcount++;
-      //Once we get 3 bytes
-      //if (serialcount > 2) {
-        if (myport.available() > 2) { //I think 2 means integers. Either that or an int is 1 byte.
-         readInts();
-      }
-    //}
-  //}
-}
-
-void readInts() {
-  print("Arduino   : ");
-  for (int idx = 0;idx<3;idx++) {
-    serialinarray[idx] = myport.read();
-    print(serialinarray[idx] + " ");
+  else {
+    serialinarray[serialcount] = inByte;
+    serialcount++;
+    //Once we get 3 bytes
+    if (serialcount > 2) {
+       println("Arduino   : "+serialinarray[0] + " " + serialinarray[1] + " " + serialinarray[2]);
+       serialcount = 0;
+       oktosend = true;
+    }
   }
-  print("\n");
-  //serialcount = 0;
-  oktosend = true;
 }
