@@ -1,4 +1,4 @@
-//Langton's Ant
+//Langton's Ant on Numberphile
 
 int[][] antpile;
 int[] direction = {1,0};

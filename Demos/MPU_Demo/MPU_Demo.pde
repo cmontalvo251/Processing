@@ -1,11 +1,10 @@
 import processing.serial.*; //library for serial communication
 
 Serial port; //creates object "port" of serial class
-int numVars = 6; //Number of variables to read
-int numPitots = 1;
-String [] names = {"Airspeed (m/s)","Airspeed (m/s)","Airspeed (m/s)","Var4","Var5","Var6","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
-float [] miny = {0,0,0,0,0,0}; //max and min values of data read in
-float [] maxy = {5,5,5,5,5,5};
+int numVars = 3; //Number of variables to read
+String [] names = {"OMEGA_X","OMEGA_Y","OMEGA_Z","Var4","Var5","Var6","Var7","Var8","Var9","Var10","Var11","Var12"};  //Names of variables
+float [] miny = {-180,-180,-180,-4,-5,-6}; //max and min values of data read in
+float [] maxy = {180,180,180,4,5,6};
 int textsize = 32; //Size of text
 float rad = 20; //Compute the radius of the circle
 int widthx = 500; //size of the screen
@@ -14,10 +13,9 @@ float [] data = new float [numVars];
 
 void setup()
 {  
-  //Debugging
-  //print(Serial.list());
-  //port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
-  port = new Serial(this,"/dev/ttyUSB0",9600); 
+  //0 = ttyS0,1 = ttyS0
+  //print(Serial.list()); for debugging
+  port = new Serial(this,"/dev/ttyACM0",9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
   size(500,500); //window size (doesn't matter)
 }
 
@@ -38,7 +36,7 @@ float decodeFloat(String inString) {
 }
 
 void readSerial() {
- if (port.available() >= 20) { 
+ if (port.available() >= (numVars-1)*4) { 
    //Each variable is 4 bytes so if you have more than N-1)*4 bytes you can read it.
    String inputString = port.readStringUntil('\n'); //the .ino writes "" which apparently is a line break 
    if (inputString != null && inputString.length() > 0) {
@@ -57,16 +55,18 @@ void draw()
 {
   background(0);
   readSerial(); //Read Serial data
-  float xdist = widthx/numPitots;
-  for (int idx = 0;idx<numPitots;idx++) {
+  float xdist = widthx/numVars;
+  for (int idx = 0;idx<numVars;idx++) {
     //data[idx] = sin((idx+1)*millis()/1000.0);
     float x = xdist*idx+xdist/2;
     float y0 = (3.0/4.0)*widthy+rad*1.1;
-    float y = (3.0/4.0)*(widthy - widthy/2.0*(data[idx]-miny[idx])/maxy[idx])+rad*1.1;
     textSize(textsize);
     text(names[idx],x-names[idx].length()*textsize/4.0,y0+textsize);
     textSize(textsize/2.0);
     text(data[idx],x-names[idx].length()*textsize/4.0,y0+2*textsize);
+    //float y = (3.0/4.0)*(widthy - widthy/2.0*(data[idx]-miny[idx])/(maxy[idx]/2.0))+rad*1.1;
+    float m = widthy/(maxy[idx]-miny[idx]);
+    float y = m*(data[idx]-miny[idx]);
     ellipse(x,y,rad,rad);
   }
   //delay(10);
