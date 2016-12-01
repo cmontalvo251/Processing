@@ -23,11 +23,9 @@ void draw() {
 }
 
 void readFloats() {
- if (myport.available() >= 4*numVars) { 
-   //Each variable is 4 bytes so if you have more than 4N bytes you can read it.
-   //In this example N=3 so 4N = 4*3 = 12. Remember that serialPrintFloatArr sends the floats over but underneath
-   //serialPrintFloatArr you send over \r\n which I think is two bytes so you just need to wait
-   //until there are more than 4N bytes in the serial buffer
+ if (myport.available() >= 4*(numVars-1)) { 
+   //Each variable is 4 bytes so if you have more than 4*(N-1) bytes you can read it.
+   //In this example N=3 so 4*(N-1) = 4*2 = 8.
    String inputString = myport.readStringUntil('\n'); //the .ino writes "\r\n" so all you need to do is read until you hit the line break
    if (inputString != null && inputString.length() > 0) {
      String [] inputStringArr = split(inputString, ","); //this splits the elements using a comma as a delimiter
