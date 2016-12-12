@@ -1,0 +1,5 @@
+gwoptics will not run on processing version 3.0 apparently
+
+library locations are in
+
+/home/carlos/sketchbook

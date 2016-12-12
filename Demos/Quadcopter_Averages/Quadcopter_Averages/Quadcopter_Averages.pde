@@ -11,13 +11,15 @@ float rad = 20; //Compute the radius of the circle
 int widthx = 500; //size of the screen
 int widthy = 500;
 float [] data = new float [numVars];
+float [] outdata = new float [numVars];
+int numReadings = 0;
 
 void setup()
 {  
   //Debugging
   //print(Serial.list());
   //port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
-  //port = new Serial(this,"/dev/ttyUSB0",9600); 
+  port = new Serial(this,"/dev/ttyUSB0",9600); 
   size(500,500); //window size (doesn't matter)
 }
 
@@ -46,33 +48,47 @@ void readSerial() {
      if (inputStringArr.length >= numVars+1) { //numVars,\r\n the \r\n is a line feed element
        //if you are reading raw values it means that there are 11 elements
        for (int idx = 0;idx<numVars;idx++) {
-         data[idx] = decodeFloat(inputStringArr[idx]);          
+         data[idx] = decodeFloat(inputStringArr[idx]);  
+         numReadings++;
+         outdata[0] = (outdata[0]*(numReadings-1)+data[0])/numReadings;
        }
      }
    }
  }
 }
 
-void FakeDate() {
-  
+void FakeData() {
+  data[0] = random(1,100);
+  numReadings++;
+  outdata[0] = (outdata[0]*(numReadings-1)+data[0])/numReadings;
 }
 
 void draw()
 {
+  //frameRate(1);
   background(0);
-  //readSerial(); //Read Serial data
-  FakeData();
+  readSerial(); //Read Serial data
+  //FakeData();
   float xdist = widthx/numPitots;
   for (int idx = 0;idx<numPitots;idx++) {
     //data[idx] = sin((idx+1)*millis()/1000.0);
     float x = xdist*idx+xdist/2;
     float y0 = (3.0/4.0)*widthy+rad*1.1;
-    float y = (3.0/4.0)*(widthy - widthy/2.0*(data[idx]-miny[idx])/maxy[idx])+rad*1.1;
+    float y = (3.0/4.0)*(widthy - widthy/2.0*(outdata[idx]-miny[idx])/maxy[idx])+rad*1.1;
+    //Put Names[idx] in here
     textSize(textsize);
     text(names[idx],x-names[idx].length()*textsize/4.0,y0+textsize);
+    //Now put the outdata number in here
     textSize(textsize/2.0);
-    text(data[idx],x-names[idx].length()*textsize/4.0,y0+2*textsize);
+    text(outdata[idx],x-names[idx].length()*textsize/4.0,y0+2*textsize);
+    //Now put the data number in here
+    textSize(textsize/2.0);
+    text(data[idx],x-names[idx].length()*textsize/4.0,y0+3*textsize);
+    //Output the ellipse
     ellipse(x,y,rad,rad);
   }
-  //delay(10);
+  if (mousePressed) {
+    numReadings = 0;
+    outdata[0] = 0;
+  }
 }
