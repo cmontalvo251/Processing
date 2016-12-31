@@ -87,8 +87,8 @@ void draw()
     textSize(textsize/2.0);
     text(data[idx],x-names[idx].length()*textsize/4.0,y0+3*textsize);
     //Output the number of readings
-    //textSize(textsize/2.0);
-    //text(numReadings[idx],x,y0+3*textsize);
+    textSize(textsize/2.0);
+    text(numReadings[idx],x-names[idx].length()*textsize/4.0,y0+3.5*textsize);
     //Output the ellipse
     ellipse(x,y,rad,rad);
   }
