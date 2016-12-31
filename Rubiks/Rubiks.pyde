@@ -3,14 +3,14 @@ from Camera import *
 
 #Declare the Rubiks Cube - Object the number in the parentheses
 #is the size of the cube and the size of the square
-mycube = Rubiks(5,30)
+mycube = Rubiks(20,10)
 
 def setup():
     #Create Canvas
     size(500,500,P3D)
     
 def draw():
-    ortho()
+    #ortho()
     
     #Make background black - there are no black squares on a rubiks cube
     background(100)
