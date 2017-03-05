@@ -56,7 +56,7 @@ def draw():
             myproj.getAzimuth()
     elif myproj.Elevation == -99:
         #perspective()
-        mycamera.setView(180,90.1) #need 90.1 otherwise you can't see the cube or the target
+        mycamera.setView(0,-89.9) #need 90.1 otherwise you can't see the cube or the target
         mycamera.setTitle("Click a Point to Set Elevation Angle")
     else:
         perspective()

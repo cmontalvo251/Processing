@@ -2,6 +2,7 @@ class Camera:
     def __init__(self,WINDOWSIZE):
         self.Size = WINDOWSIZE*0.05
         self.Y = WINDOWSIZE
+        self.WINDOWSIZE = WINDOWSIZE
         self.Az = 0
         self.El = 0
         
@@ -11,12 +12,13 @@ class Camera:
     def setTitle(self,title_text):
         textSize(self.Size)
         fill(0,0,0)
-        translate(0,self.Y,0)
         #rotateZ(PI/2)
+        rotateX(-PI/2)
+        translate(0,self.WINDOWSIZE*0.4,0)
         text(title_text,0,0)
+        translate(0,-self.WINDOWSIZE*0.4,0)
+        rotateX(PI/2)
         #rotateZ(-PI/2)
-        translate(0,-self.Y,0)
-        
                
     def setView(self,Az,El):
         self.Az = Az*PI/180.0
