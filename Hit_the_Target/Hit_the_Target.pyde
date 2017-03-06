@@ -54,18 +54,18 @@ def draw():
             myproj.X = mouseX
             myproj.Y = mouseY
             myproj.getAzimuth()
+            delay(300)
     elif myproj.Elevation == -99:
         #perspective()
         mycamera.setView(0,-89.9) #need 90.1 otherwise you can't see the cube or the target
         mycamera.setTitle("Click a Point to Set Elevation Angle")
+        if (mousePressed):
+            myproj.Z = mouseY
+            myproj.getElevation()
     else:
-        perspective()
-                        
-
-    #else if projectile.getElevation == -99
-    #we set the view window to side view
-    #Set the title to "Click a point to set the elevation angle"
-    
+        mycamera.setView(0,-40)
+        myproj.dynamics()
+        
     #else 
     #if projectile.getAltitude < 0
     #we set the view window to interactive and we launch the cube
