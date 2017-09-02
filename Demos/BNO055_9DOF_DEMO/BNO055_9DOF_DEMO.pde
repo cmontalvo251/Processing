@@ -46,7 +46,7 @@ void setup()
    */
 
   delay(3000);
-  //myPort.clear();
+  myPort.clear();
   //myPort.write("1"); //wait, why are we writing? the arduino isn't listening
   //Whatever, maybe we don't need this. I might comment it out and see what happens
   //REVISIT REVISIT - not sure why this is happening
@@ -83,7 +83,7 @@ float decodeFloat(String inString) {
 void readQ() {
   //print(myPort.available());
   //print("\n");
-  if (myPort.available() >= 44) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
+  if (myPort.available() >= 20) { //more than 18 bytes coming in. Not sure if this is right. May need to REVISIT.
     //so if the serial command is 4 numbers at 4 bytes per float that means there is only 16 bytes.
     //so this may never execute correctly - ok so apprently there are 5 numbers because a line end is another one so it's
     //5*4 = 20 bytes so I think this will be fine
@@ -97,18 +97,18 @@ void readQ() {
       String [] inputStringArr = split(inputString, ","); //this splits the elements using a comma as a delimiter
       //print(inputStringArr.length);
       //print("\n");
-      if (inputStringArr.length >= 11) { // q0,q1,q2,q3,\r\n so we have 5 elements
+      if (inputStringArr.length >= 5) { // q0,q1,q2,q3,\r\n so we have 5 elements
         //if you are reading raw values it means that there are 11 elements
         q[0] = decodeFloat(inputStringArr[0]);
         q[1] = decodeFloat(inputStringArr[1]);
         q[2] = decodeFloat(inputStringArr[2]);
         q[3] = decodeFloat(inputStringArr[3]);
-        accel[0] = decodeFloat(inputStringArr[4]);
-        accel[1] = decodeFloat(inputStringArr[5]);
-        accel[2] = decodeFloat(inputStringArr[6]);
-        rg[0] = decodeFloat(inputStringArr[7]);
-        rg[1] = decodeFloat(inputStringArr[8]);
-        rg[2] = decodeFloat(inputStringArr[9]);        
+        //accel[0] = decodeFloat(inputStringArr[4]);
+        //accel[1] = decodeFloat(inputStringArr[5]);
+        //accel[2] = decodeFloat(inputStringArr[6]);
+        //rg[0] = decodeFloat(inputStringArr[7]);
+        //rg[1] = decodeFloat(inputStringArr[8]);
+        //rg[2] = decodeFloat(inputStringArr[9]);        
       }
     }
   }
@@ -205,13 +205,6 @@ void draw() {
     text("Point FreeIMU's X axis to your monitor then press \"h\"", 20, VIEW_SIZE_Y - 30);
     //so it looks like there is a keypress function
   }
-  
-  //This is for putting the code inside the Duplo airplane
-  for (int idx = 0;idx<3;idx++) {
-   Euler_Temp[idx] = Euler[idx]; 
-  }
-  Euler[1] = -Euler_Temp[2]; //Switch phi and theta
-  Euler[2] = Euler_Temp[1];
 
   textFont(font, 20);  //set the textfont to Courier and size 20
   textAlign(LEFT, TOP); //set the test to left and top
@@ -220,7 +213,7 @@ void draw() {
   //rg[0] = 0;
   //rg[1] = 0;
   //rg[2] = 0;
-  text("RG(deg/s):\n" + "X:" + int(rg[0]) + "\n Y:" + int(rg[1]) + "\n Z:" + int(rg[2]),500,20);
+  //text("RG(deg/s):\n" + "X:" + int(rg[0]) + "\n Y:" + int(rg[1]) + "\n Z:" + int(rg[2]),500,20);
   //accel[0] = 0;
   //accel[1] = 0;
   //accel[2] = 0;
@@ -230,7 +223,7 @@ void draw() {
   //  accel[idx] = int(accel[idx]);
  // }
   //accel[2] = accel[2]+1;
-  text("ACCEL(Gs):\n" + "X:" + accel[0] + "\n Y:" + accel[1] + "\n Z:" + accel[2],200,450);
+  //text("ACCEL(Gs):\n" + "X:" + accel[0] + "\n Y:" + accel[1] + "\n Z:" + accel[2],200,450);
   //text("ACCELCAL(Gs):\n" + "X:" + accelcal[0] + "\n Y:" + accelcal[1] + "\n Z:" + accelcal[2],20,450);
 
   //Alright then we draw a cube on the screen - let's check this out
