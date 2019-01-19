@@ -9,7 +9,7 @@ float [] maxy = {5,5,5,5,5,5};
 int textsize = 32; //Size of text
 float rad = 20; //Compute the radius of the circle
 int widthx = 1000; //size of the screen
-int widthy = 900;
+int widthy = 700;
 float [] data = new float [numVars];
 float [] outdata = new float [numVars];
 int [] numReadings = new int [numVars];
@@ -20,7 +20,7 @@ void setup()
   //print(Serial.list());
   //port = new Serial(this, Serial.list()[0],9600); //set baud rate - make sure to have the arduino plugged in, otherwise the code will not work.
   port = new Serial(this,"/dev/ttyUSB0",9600); 
-  size(1000,900); //window size (doesn't matter)
+  size(1000,700); //window size (doesn't matter)
 }
 
 float decodeFloat(String inString) {
