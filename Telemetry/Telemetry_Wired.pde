@@ -14,7 +14,8 @@ void setup()
   
   font = createFont("Courier", 32); //built in processing command
   //Talk to Arduino
-  myport = new Serial(this,"/dev/ttyACM0",9600);
+  //myport = new Serial(this,"/dev/ttyACM0",9600);
+  myport = new Serial(this,"/dev/ttyUSB0",9600);
   delay(2000); //wait for arduino to initialize
   println("Ready");
 }
