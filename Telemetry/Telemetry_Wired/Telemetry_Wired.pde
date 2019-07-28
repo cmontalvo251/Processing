@@ -7,6 +7,8 @@ import processing.serial.*;
 Serial myport;
 float[] received_data = new float[4];
 int numVars = 4; //time,phi,theta,psi
+float time_now = 0;
+float last_send = 0;
 
 void setup() 
 {  
@@ -77,9 +79,9 @@ void drawCube() {
 
   // a demonstration of the following is at 
   // http://www.varesano.net/blog/fabio/ahrs-sensor-fusion-orientation-filter-3d-graphical-rotating-cube
-  rotateZ(-received_data[0]); //phi 
-  rotateX(-received_data[1]); //theta
-  rotateY(-received_data[2]); //psi in that order for standard Aerospace sequences
+  rotateZ(-received_data[1]); //phi 
+  rotateX(received_data[2]); //theta
+  rotateY(-received_data[3]); //psi in that order for standard Aerospace sequences
 
   buildBoxShape(); //use QUADS to draw the faces in different colors
 
@@ -88,6 +90,7 @@ void drawCube() {
 
 void SendSerial() {   
    if (oktosend) {
+      last_send = time_now;
       //delay(200);
       print("Requesting Data: ");
       String messageToSend="\n";
@@ -99,10 +102,11 @@ void SendSerial() {
 
 //Alright here is our draw loop
 void draw() {
-  //If you're doing the control system routine on the Arduino itself you need to send the statevector to the Arduino via the serial command
-  SendSerial(); //REVISIT
-  //Then you need to get the Control State from the Arduino
-  GetSerial(); //REVISIT
+  
+  time_now = millis()/1000.0;
+  
+  SendSerial(); 
+  GetSerial(); 
     
   background(#000000); //set the background to white? 
   fill(#ffffff); //set the background to black? maybe vice versa. Doesn't really matter
@@ -139,6 +143,12 @@ void GetSerial() {
      }
    }
  }
+ 
+ if (time_now - last_send > 5) {
+   oktosend = true;
+ }
+ 
+ 
 }
 
 float decodeFloat(String inString) {
