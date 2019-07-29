@@ -9,10 +9,19 @@ float[] received_data = new float[4];
 int numVars = 4; //time,phi,theta,psi
 float time_now = 0;
 float last_send = 0;
+PrintWriter file;
 
 void setup() 
 {  
   size(800, 600, P3D); //set view size with 3D processing
+  
+  int d = day();    // Values from 1 - 31
+  int m = month();  // Values from 1 - 12
+  int y = year();   // 2003, 2004, 2005, etc.
+  int s = second();  // Values from 0 - 59
+  int min = minute();  // Values from 0 - 59
+  int h = hour();    // Values from 0 - 23
+  file = createWriter("/home/carlos/Desktop/Logging_"+str(y)+"_"+str(m)+"_"+str(d)+"_"+str(h)+"_"+str(min)+"_"+str(s)+".txt");
   
   font = createFont("Courier", 32); //built in processing command
   //Talk to Arduino
@@ -118,7 +127,7 @@ void draw() {
   text("Time = " + received_data[0],200,200);
   //Alright then we draw a cube on the screen - let's check this out
   drawCube(); //using openGL
-}
+  }
 
 void GetSerial() {
  //println(myport.available());
@@ -137,7 +146,10 @@ void GetSerial() {
        print("Received Data: ");
        for (int idx = 0;idx<numVars;idx++) {
            print(received_data[idx] + " ");
+           file.write(received_data[idx]+",");
        }
+       file.write("\n");
+       file.flush();
        print("\n");
        oktosend = true;
      }
