@@ -24,7 +24,8 @@ void setup()
 {
   size(800, 600, P3D); //set view size with 3D processing
   //myPort = new Serial(this, serialPort, 115200); //this will need to change. Maybe 9600 baud rate?
-  myPort = new Serial(this,Serial.list()[0],115200); //make sure the baud rate is the same as the ino code
+  //myPort = new Serial(this,Serial.list()[0],115200); //make sure the baud rate is the same as the ino code
+  myPort = new Serial(this,"/dev/ttyACM0",115200); //make sure the baud rate is the same as the ino code
   //connect to the arduino
 
   font = createFont("Courier", 32); //built in processing command 

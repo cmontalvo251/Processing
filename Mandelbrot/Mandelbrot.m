@@ -1,5 +1,7 @@
 
-purge
+clear
+clc
+close all
 
 xsize = 600;
 ysize = 600;
