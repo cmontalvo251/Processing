@@ -108,7 +108,7 @@ void readQ() {
         accel[2] = decodeFloat(inputStringArr[6]);
         rg[0] = decodeFloat(inputStringArr[7]);
         rg[1] = decodeFloat(inputStringArr[8]);
-        rg[2] = decodeFloat(inputStringArr[9]);        
+        rg[2] = decodeFloat(inputStringArr[9]);
       }
     }
   }
@@ -178,7 +178,7 @@ void drawCube() {
 
   buildBoxShape(); //use QUADS to draw the faces in different colors
 
-  popMatrix(); //restore the orientation window 
+  popMatrix(); //restore the orientation window
 }
 
 
@@ -197,18 +197,17 @@ void draw() {
     //QuatProd is a Hamilton Product which is equivalent to rotating a vector
     quaternionToEuler(quatProd(hq, q), Euler);
     text("Disable home position by pressing \"n\"", 20, VIEW_SIZE_Y - 30);
-  }
-  else {
+  } else {
     //this command will be set if hq is null or n is pressed
     //This just converts the quaternion to Euler
     quaternionToEuler(q, Euler);
     text("Point FreeIMU's X axis to your monitor then press \"h\"", 20, VIEW_SIZE_Y - 30);
     //so it looks like there is a keypress function
   }
-  
+
   //This is for putting the code inside the Duplo airplane
-  for (int idx = 0;idx<3;idx++) {
-   Euler_Temp[idx] = Euler[idx]; 
+  for (int idx = 0; idx<3; idx++) {
+    Euler_Temp[idx] = Euler[idx];
   }
   Euler[1] = -Euler_Temp[2]; //Switch phi and theta
   Euler[2] = Euler_Temp[1];
@@ -220,7 +219,7 @@ void draw() {
   //rg[0] = 0;
   //rg[1] = 0;
   //rg[2] = 0;
-  text("RG(deg/s):\n" + "X:" + int(rg[0]) + "\n Y:" + int(rg[1]) + "\n Z:" + int(rg[2]),500,20);
+  text("RG(deg/s):\n" + "X:" + int(rg[0]) + "\n Y:" + int(rg[1]) + "\n Z:" + int(rg[2]), 500, 20);
   //accel[0] = 0;
   //accel[1] = 0;
   //accel[2] = 0;
@@ -228,9 +227,9 @@ void draw() {
   //  accel[idx] = accel[idx] - accelcal[idx];
   //  accel[idx] /= 500;
   //  accel[idx] = int(accel[idx]);
- // }
+  // }
   //accel[2] = accel[2]+1;
-  text("ACCEL(Gs):\n" + "X:" + accel[0] + "\n Y:" + accel[1] + "\n Z:" + accel[2],200,450);
+  text("ACCEL(Gs):\n" + "X:" + accel[0] + "\n Y:" + accel[1] + "\n Z:" + accel[2], 200, 450);
   //text("ACCELCAL(Gs):\n" + "X:" + accelcal[0] + "\n Y:" + accelcal[1] + "\n Z:" + accelcal[2],20,450);
 
   //Alright then we draw a cube on the screen - let's check this out
@@ -246,8 +245,7 @@ void keyPressed() {
 
     // set hq the home quaternion as the quatnion conjugate coming from the sensor fusion
     hq = quatConjugate(q);
-  }
-  else if (key == 'n') {
+  } else if (key == 'n') {
     println("pressed n");
     hq = null;
   }
