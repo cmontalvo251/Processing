@@ -15,12 +15,12 @@ battery = data[:,4]
 solar = data[:,5]
 
 plt.figure()
-plt.plot(time,load,'b-',label='Load')
+#plt.plot(time,load,'b-',label='Load')
 plt.plot(time,battery,'r-',label='Battery')
-plt.plot(time,solar,'g-',label='Solar')
+#plt.plot(time,solar,'g-',label='Solar')
 plt.legend()
 plt.grid()
 plt.xlabel('Time (hours)')
 plt.ylabel('Voltage')
-plt.ylim([3,5])
+#plt.ylim([3,3.3])
 plt.show()
