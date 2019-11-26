@@ -5,8 +5,8 @@ final int VIEW_SIZE_X = 800, VIEW_SIZE_Y = 600;
 boolean oktosend = true;
 import processing.serial.*;
 Serial myport;
-float[] received_data = new float[3];
-int numVars = 3; //load, battery and solar voltages
+float[] received_data = new float[4];
+int numVars = 4; //load, battery and solar voltages (added time received_data[3])
 float time_now = 0;
 float last_send = 0;
 PrintWriter file;
@@ -25,7 +25,7 @@ void setup()
   
   font = createFont("Courier", 32); //built in processing command
   //Talk to Arduino
-  myport = new Serial(this,"/dev/ttyACM1",115200);
+  myport = new Serial(this,"/dev/ttyACM0",115200);
   //myport = new Serial(this,"/dev/ttyUSB0",9600);
   delay(2000); //wait for arduino to initialize
   println("Ready");
@@ -40,11 +40,11 @@ void draw() {
   fill(#ffffff); //set the background to black? maybe vice versa. Doesn't really matter
   textFont(font, 20);  //set the textfont to Courier and size 20
   textAlign(LEFT, TOP); //set the test to left and top
-  text("Voltages :\n Load  : " + received_data[0] + "\n Battery: " + received_data[1] + "\n Solar Panel: " + received_data[2], 150, 20); 
+  text("Voltages :\n Load  : " + received_data[0] + "\n Battery: " + received_data[1] + "\n Solar Panel: " + received_data[2] + "\n Arduino Time: " + received_data[3], 150, 20); 
   textAlign(LEFT,BOTTOM);
   text("Time = " + hour() + ":" + minute() + ":" + second(),200,200);
   
-  delay(1000);
+  delay(200);
 }
 
 void GetSerial() {
