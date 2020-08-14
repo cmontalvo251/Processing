@@ -1,4 +1,6 @@
 import processing.serial.*;
+int num_digits = 3;
+char[] input_chars = new char[3];
 
 Serial myport;
 
@@ -15,11 +17,26 @@ void setup() {
 
 void draw() {
     //Check and see if Data has been received from Arduino
-    readChar();
+    readChars();
 }
 
-void readChar() {
- if (myport.available() > 0) { 
+void readChars() {
+  if (myport.available() > 0) {
+    print("CR: ");
+    int inByte = myport.read();
+    print(inByte);
+    print(" ");
+    int number = inByte - 48;
+    print(number);
+    print(" ");
+    if (inByte == 10){ //newline
+      print('\n');
+    }
+  }
+}
+
+void readChars2() {
+ if (myport.available()>0) { 
    //Each variable is 4 bytes so if you have more than 4*(N-1) bytes you can read it.
    //In this example N=3 so 4*(N-1) = 4*2 = 8.
    String inputString = myport.readStringUntil('\n'); //the .ino writes "\r\n" so all you need to do is read until you hit the line break

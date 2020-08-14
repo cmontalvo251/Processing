@@ -15,7 +15,25 @@ void setup() {
 
 void draw() {
     //Check and see if Data has been received from Arduino
-    readChar();
+    //Convert mouseY to an integer
+    char output = getChar();
+}
+
+char getChar() {
+  int number = mouseY*10/height;
+  char output = char(number+48);
+  print(mouseY,number,output);
+  print('\n');
+  return output;
+}
+
+void mouseClicked() {
+  char output = getChar();
+  sendChar(output);
+}
+
+void sendChar(char output) {
+  myport.write(output);
 }
 
 void readChar() {
