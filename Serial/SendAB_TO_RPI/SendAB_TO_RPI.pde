@@ -25,19 +25,17 @@ void SerialPutHello() {
   println("Sent");
 }
  
-int SerialGetHello() {
+void SerialGetHello() {
   //Consume w\r\n
   println("Reading the Serial Buffer for w slash r slash n");
-  int err = 0;
-  for (int i = 0;i<3;i++) {
-    int inByte = 65535;
-    do {
-      inByte = my.read();
-    } while ((inByte == 65535) || (inByte == -1));
-    err+=inByte;
-    println(inByte);
+  char inchar = '\0';
+  while (true) {
+    inchar = my.readChar();
+    if (int(inchar) != 65535) {
+      println("char = "+inchar + " int = ",int(inchar));
+    }
   }
-  return err;
+  //return 0;
 }
 
 void SerialGetArray() {
@@ -70,15 +68,6 @@ void SerialGetArray() {
 }
 
 void draw() {
-  //println(ix,iy);
-  char inchar = '\0';
-  //do {
-    inchar = my.readChar();
-  //} while (int(inchar) == 65535);
-  //println("Waiting for characters");
-  if (int(inchar) != 65535) {
-    println("char = "+inchar + " int = ",int(inchar));
-  }
 }
 
 void mouseClicked() {
@@ -90,12 +79,12 @@ void mouseClicked() {
 
 int GetData() {
   SerialPutHello();
-  /*
-  int err = SerialGetHello();
-  if (err == 0) {
+  SerialGetHello();
+  /*if (err == 0) {
     println("Did not receive response from Hardware. Exiting now \n");
     return 1;
   }
+  /*
   
   //Now Read from Arduino
   SerialGetArray();
