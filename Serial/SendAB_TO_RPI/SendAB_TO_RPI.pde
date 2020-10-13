@@ -71,15 +71,15 @@ void draw() {
 }
 
 void mouseClicked() {
-  int err = GetData();
-  if (err==0) {
-    println("Data Received!");
-  }
+  GetData();
+  //if (err==0) {
+  //  println("Data Received!");
+  //}
 }
 
-int GetData() {
+void GetData() {
   SerialPutHello();
-  SerialGetHello();
+  //SerialGetHello();
   /*if (err == 0) {
     println("Did not receive response from Hardware. Exiting now \n");
     return 1;
@@ -94,5 +94,5 @@ int GetData() {
   iy = rec_number_array[1];
   print(ix,iy);
   */ 
-  return 0;
+  //return 0;
 }
