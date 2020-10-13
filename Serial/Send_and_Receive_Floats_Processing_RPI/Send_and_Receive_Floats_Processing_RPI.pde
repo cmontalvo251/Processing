@@ -55,6 +55,36 @@ int SerialGetHello() {
   return 0;
 }
 
+void SerialGetArray() {
+  for (int d = 0;d<number_of_rec_numbers;d++) {
+    int i = 0;
+    char inchar = '\0';
+    println("Waiting for characters");
+    do {
+      do {
+        inchar = my.readChar();
+      } while (int(inchar) == 65535);
+      println("Receiving: i = "+str(i)+" char = "+inchar+" chartoint = " + str(int(inchar)));
+      inLine[i++] = inchar;
+    } while ((inchar != '\r') && (i<60));
+    println("Response received");
+
+    // Format from Arduino:
+    // H:nnnnnnnn 
+    String inString = String.valueOf(inLine);
+    
+    // Now Convert from ASCII to HEXSTRING to FLOAT
+    println("Converting to Float");
+    String clean = inString.substring(2).replaceAll(" ","");
+    String truncated = clean.substring(0,8);
+    println(inString);
+    println(clean);
+    println(truncated);
+    rec_number_array[d] = Float.intBitsToFloat(unhex(truncated));
+    println("Float Number = " + str(rec_number_array[d]));
+  }
+}
+
 void draw() {
   //If we have already requested data then we need to check for data 
   if (oktosend == 0) {
@@ -62,6 +92,9 @@ void draw() {
     int response = SerialGetHello();
     //if a response was received
     if (response == 1) {
+      //A response is just w\r\n so we need to continue reading for 
+      //H:nnnnnnn yadda yadda
+      SerialGetArray();
       //We can reset the oktosend and request more data
       println("Response Received \n");
       oktosend = 1;
