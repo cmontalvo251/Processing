@@ -1,6 +1,6 @@
 import processing.serial.*;
-float[] rec_number_array = new float[2];
-int number_of_rec_numbers = 2;
+float[] rec_number_array = new float[3];
+int number_of_rec_numbers = 3;
 Serial my;
 char[]inLine = new char[60];
 float ix,iy;
