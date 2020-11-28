@@ -8,9 +8,17 @@
 void setup() {
   size(200,200);
   float num = -3.6;
-  long bits = Float.FloatToIntBits(num);
+  int bits = Float.floatToIntBits(num);
+  String str = Integer.toBinaryString(bits);
+  String hexa = hex(bits);
+  //int maxN = unhex("C0666666");
+  int maxN =   unhex("7FFFFFFF");
   println(num);
+  println(str);
   println(bits);
+  println(hexa);
+  println(maxN);
+  
   
 }
 
