@@ -62,7 +62,7 @@ void setup()
   int s = second();  // Values from 0 - 59
   int min = minute();  // Values from 0 - 59
   int h = hour();    // Values from 0 - 23
-  file = createWriter("/home/carlos/Desktop/Logging_"+str(y)+"_"+str(m)+"_"+str(d)+"_"+str(h)+"_"+str(min)+"_"+str(s)+".txt");
+  file = createWriter("Logging_"+str(y)+"_"+str(m)+"_"+str(d)+"_"+str(h)+"_"+str(min)+"_"+str(s)+".txt");
  
   //Initialize all receive vars to zero
   for (int i = 0;i<numVars;i++){

@@ -1,3 +1,4 @@
 Doodle/application.windows32
 Doodle/application.windows64
 *.class
+*.txt
