@@ -1,5 +1,5 @@
 ////////////GLOBAL VARIABLES/////////////
-int numVars = 10;
+int numVars = 2;
 float[] received_data = new float[numVars];
 
 ////////VIEWPORT VARIABLES//////////////////
@@ -55,10 +55,11 @@ void setup()
 void draw() {
     
   ////Check for Response EveryLoop
-  //H:nnnnnnn yadda yadda
-  //if (myport.available()>0) {
-  //  SerialGetArray();
-  //}
+  //H:nnnnnnn\r<mutiplenumbers>\n
+  if (myport.available()>0) {
+    print("Something is in the pipe\n");
+    SerialGetNumber();
+  }
   
   //Set the view port color
   background(#000000); // I kept this here if we want to revert the background to original 
@@ -86,25 +87,39 @@ void logdata() {
   print("\n");
 }
 
-void SerialGetArray() {
-  for (int d = 0;d<numVars;d++) {
-    int i = 0;
-    char inchar = '\0';
-    println("Waiting for characters");
+void SerialGetNumber() {
+  int d = 0;
+  int i = 0;
+  char inchar = '\0';
+  int numchars_received = 0;
+  int w = 0;
+  println("Waiting for characters");
+  do {
+    w = 0;
     do {
-      do {
-        inchar = myport.readChar();
-      } while (int(inchar) == 65535);
+      inchar = myport.readChar();
+      if (numchars_received>0) {
+        w++;
+      }
+    } while ((int(inchar) == 65535) && (w<100000));
+    if (int(inchar) != 65535) {
       println("Receiving: i = "+str(i)+" char = "+inchar+" chartoint = " + str(int(inchar)));
       inLine[i++] = inchar;
-    } while ((inchar != '\r') && (i<60));
-    println("Response received");
-
-    // Format from Arduino:
-    // H:nnnnnnnn 
+      numchars_received++; 
+    } else {
+      print("Loss of communcation w = " + str(w) + "\n");
+      return;
+    }
+  } while ((inchar != '\r') && (i<60));
+  println("Response received");
+   
+  // Now Convert from ASCII to HEXSTRING to FLOAT
+  if (inLine[1] == ':') {
+     // Format from Arduino:
+    // H:nnnnnnnn
+    d = int(inLine[0])-48;
+    print("Index Received = "+str(d)+"\n");
     String inString = String.valueOf(inLine);
-    
-    // Now Convert from ASCII to HEXSTRING to FLOAT
     println("Converting to Float");
     String clean = inString.substring(2).replaceAll(" ","");
     String truncated = clean.substring(0,8);
@@ -114,5 +129,7 @@ void SerialGetArray() {
     received_data[d] = Float.intBitsToFloat(unhex(truncated));
   }
   //Update time that we received a response
-  logdata();
+  if (d == numVars - 1) {
+    logdata();
+  }
 }
