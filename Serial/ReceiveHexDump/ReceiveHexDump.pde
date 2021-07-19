@@ -1,5 +1,5 @@
 ////////////GLOBAL VARIABLES/////////////
-int numVars = 2;
+int numVars = 7;
 float[] received_data = new float[numVars];
 
 ////////VIEWPORT VARIABLES//////////////////
@@ -93,6 +93,10 @@ void SerialGetNumber() {
   char inchar = '\0';
   int numchars_received = 0;
   int w = 0;
+  //Set some key characters in inLine to NULL
+  for (int j = 0;j<12;j++) {
+    inLine[j] = '\0';
+  }
   println("Waiting for characters");
   do {
     w = 0;
@@ -114,7 +118,7 @@ void SerialGetNumber() {
   println("Response received");
    
   // Now Convert from ASCII to HEXSTRING to FLOAT
-  if (inLine[1] == ':') {
+  if ((inLine[1] == ':') && ((inLine[10] == '\r') || (inLine[11] == '\r')) {
      // Format from Arduino:
     // H:nnnnnnnn
     d = int(inLine[0])-48;
