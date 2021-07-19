@@ -118,7 +118,7 @@ void SerialGetNumber() {
   println("Response received");
    
   // Now Convert from ASCII to HEXSTRING to FLOAT
-  if ((inLine[1] == ':') && ((inLine[10] == '\r') || (inLine[11] == '\r')) {
+  if ((inLine[1] == ':') && ((inLine[10] == '\r') || (inLine[11] == '\r'))) {
      // Format from Arduino:
     // H:nnnnnnnn
     d = int(inLine[0])-48;
