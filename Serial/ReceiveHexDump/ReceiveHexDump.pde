@@ -72,6 +72,8 @@ void draw() {
   for (int i = 0;i<numVars;i++) {
     text(received_data[i] + "\n",width/3.0,height*i/numVars);
   }
+  
+  logdata();
 }
   
 //Write data to file
