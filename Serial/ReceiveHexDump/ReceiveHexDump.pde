@@ -1,5 +1,5 @@
 ////////////GLOBAL VARIABLES/////////////
-int numVars = 7;
+int numVars = 6;
 float[] received_data = new float[numVars];
 
 ////////VIEWPORT VARIABLES//////////////////
