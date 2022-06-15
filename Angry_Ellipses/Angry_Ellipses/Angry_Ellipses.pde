@@ -6,7 +6,7 @@ float y = ysize-ellipsesize;
 float x = ellipsesize;
 float deltat = 0.1;
 float angle = 0;
-float V0 = xsize*0.15;
+float Vmax = xsize*0.15;
 float xdot = 0;
 float ydot = 0;
 float g = 0;
@@ -66,12 +66,13 @@ void draw()
    colors[numclicks][1] = green;
    colors[numclicks][2] = blue;
    xclicked[numclicks] = mouseX;
-   yclicked[numclicks] = ysize/8;
+   yclicked[numclicks] = mouseY;
    numclicks++;
    angle = PI/2-mouseX*PI/(4*xsize);
+   float V0 = Vmax*(1-mouseY/float(ysize));
+   print("Status:",mouseX,mouseY,V0,"\n");
    xdot = V0*cos(angle);
    ydot = V0*sin(angle);
    g = 9.81;
  }
 }
-
